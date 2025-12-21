@@ -1,5 +1,5 @@
-package com.example.demo.dto;
-
-public class LoginRequest{
-    
+@Data
+public class LoginRequest {
+    private String email;
+    private String password;
 }

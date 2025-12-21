@@ -17,7 +17,6 @@ public class Facility {
     private String name;
 
     private String description;
-
-    private String openTime;   // HH:mm
-    private String closeTime;  // HH:mm
+    private String openTime;
+    private String closeTime;
 }

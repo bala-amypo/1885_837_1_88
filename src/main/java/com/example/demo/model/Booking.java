@@ -2,6 +2,7 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -23,5 +24,5 @@ public class Booking {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
-    private String status; // CONFIRMED / CANCELLED
+    private String status = "CONFIRMED";
 }
