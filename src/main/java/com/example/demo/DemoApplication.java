@@ -14,8 +14,10 @@ public class DemoApplication {
     }
 
     // Add this bean so Spring can inject PasswordEncoder
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+   @Bean
+public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+}
+
     }
 }
