@@ -7,6 +7,7 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "users")
 public class User {
 
     @Id
@@ -20,5 +21,5 @@ public class User {
 
     private String password;
 
-    private String role; // RESIDENT / ADMIN
+    private String role = "RESIDENT";
 }
