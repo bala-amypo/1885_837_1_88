@@ -1,3 +1,12 @@
+package com.example.demo.controller;
+
+import com.example.demo.dto.*;
+import com.example.demo.model.User;
+import com.example.demo.security.JwtTokenProvider;
+import com.example.demo.service.impl.UserServiceImpl;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.bind.annotation.*;
+
 @RestController
 @RequestMapping("/auth")
 @Tag(name = "Auth")
@@ -22,7 +31,7 @@ public class AuthController {
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest request) {
         User user = userService.findByEmail(request.getEmail());
-        String token = jwtTokenProvider.generateToken(null, user.getId(),
+        String token = jwtTokenProvider.generateToken(
                 user.getEmail(), user.getRole());
         return new LoginResponse(token);
     }
