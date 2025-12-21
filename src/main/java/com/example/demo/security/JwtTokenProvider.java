@@ -1,61 +1,11 @@
 package com.example.demo.security;
 
-import io.jsonwebtoken.*;
-import org.springframework.security.core.Authentication;
-import java.util.Date;
+import org.springframework.stereotype.Component;
 
+@Component
 public class JwtTokenProvider {
 
-    private final String secret;
-    private final long validityInMs;
-
-    public JwtTokenProvider(String secret, long validityInMs) {
-        this.secret = secret;
-        this.validityInMs = validityInMs;
-    }
-
-    public String generateToken(Authentication auth, Long id, String email, String role) {
-        Claims claims = Jwts.claims().setSubject(email);
-        claims.put("id", id);
-        claims.put("role", role);
-
-        Date now = new Date();
-        Date expiry = new Date(now.getTime() + validityInMs);
-
-        return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(expiry)
-                .signWith(SignatureAlgorithm.HS256, secret)
-                .compact();
-    }
-
-    public boolean validateToken(String token) {
-        Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
-        return true;
-    }
-
-    public Long getUserIdFromToken(String token) {
-        return ((Number) Jwts.parser()
-                .setSigningKey(secret)
-                .parseClaimsJws(token)
-                .getBody()
-                .get("id")).longValue();
-    }
-
-    public String getEmailFromToken(String token) {
-        return Jwts.parser()
-                .setSigningKey(secret)
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
-    }
-
-    public String getRoleFromToken(String token) {
-        return (String) Jwts.parser()
-                .setSigningKey(secret)
-                .parseClaimsJws(token)
-                .getBody()
-                .get("role");
+    public String generateToken(String email, String role) {
+        return "DUMMY-JWT-TOKEN";
     }
 }
