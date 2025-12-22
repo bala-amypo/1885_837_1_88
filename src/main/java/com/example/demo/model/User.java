@@ -10,6 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,9 +24,12 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    // Default role: RESIDENT
+    @Builder.Default
     @Column(nullable = false)
     private String role = "RESIDENT";
 
+    // One-to-one relationship with ApartmentUnit (inverse side)
     @OneToOne(mappedBy = "owner")
     private ApartmentUnit apartmentUnit;
 }
