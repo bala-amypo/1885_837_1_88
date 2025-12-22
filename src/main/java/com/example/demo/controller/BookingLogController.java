@@ -2,27 +2,24 @@ package com.example.demo.controller;
 
 import com.example.demo.model.BookingLog;
 import com.example.demo.service.BookingLogService;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.ResponseEntity;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
-@RequestMapping("/logs")
-@Tag(name = "BookingLog", description = "View booking logs")
+@RequestMapping("/booking-logs")
+@RequiredArgsConstructor
 public class BookingLogController {
 
-    private final BookingLogService bookingLogService;
+    private final BookingLogService logService;
 
-    public BookingLogController(BookingLogService bookingLogService) {
-        this.bookingLogService = bookingLogService;
+    @PostMapping
+    public BookingLog addLog(@RequestBody BookingLog log) {
+        return logService.saveLog(log);
     }
 
-    // GET /logs/booking/{bookingId}
-    @GetMapping("/booking/{bookingId}")
-    public ResponseEntity<List<BookingLog>> getLogsByBooking(@PathVariable Long bookingId) {
-        List<BookingLog> logs = bookingLogService.getLogsByBooking(bookingId);
-        return ResponseEntity.ok(logs);
+    @GetMapping
+    public List<BookingLog> getAllLogs() {
+        return logService.getAllLogs();
     }
 }
