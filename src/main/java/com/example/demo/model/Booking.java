@@ -2,8 +2,8 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "bookings")
@@ -12,27 +12,17 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class Booking {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "facility_id")
-    private Facility facility;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @Column(nullable = false)
     private LocalDateTime startTime;
-
-    @Column(nullable = false)
     private LocalDateTime endTime;
 
-    @Column(nullable = false)
-    private String status = "CONFIRMED";
+    @ManyToOne
+    private User user;
 
-    @OneToMany(mappedBy = "booking")
-    private List<BookingLog> logs;
+    @ManyToOne
+    private Facility facility;
 }

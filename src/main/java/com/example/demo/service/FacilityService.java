@@ -4,6 +4,7 @@ import com.example.demo.model.Facility;
 import java.util.List;
 
 public interface FacilityService {
-    Facility addFacility(Facility facility);
+    Facility saveFacility(Facility facility);
     List<Facility> getAllFacilities();
+    Facility getFacilityById(Long id);
 }

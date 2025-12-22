@@ -1,5 +1,8 @@
+package com.example.demo.model;
+
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,11 +17,12 @@ public class BookingLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
+    private String action; // CREATED, UPDATED, CANCELLED
+    private LocalDateTime timestamp;
+
+    @ManyToOne
     private Booking booking;
 
-    @Column(nullable = false)
-    private String logMessage;
-
-    private LocalDateTime loggedAt;
+    @ManyToOne
+    private User performedBy;
 }
