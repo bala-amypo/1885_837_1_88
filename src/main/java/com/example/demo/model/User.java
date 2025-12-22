@@ -1,14 +1,12 @@
-package com.example.demo.model;
-
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
 @Table(name = "users")
-@Data
+@Data        // generates getters, setters, toString, equals, hashCode
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Builder     // allows User.builder().name(...).build()
 public class User {
 
     @Id
@@ -24,12 +22,10 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    // Default role: RESIDENT
     @Builder.Default
     @Column(nullable = false)
     private String role = "RESIDENT";
 
-    // One-to-one relationship with ApartmentUnit (inverse side)
     @OneToOne(mappedBy = "owner")
     private ApartmentUnit apartmentUnit;
 }

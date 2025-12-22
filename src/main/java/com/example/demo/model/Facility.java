@@ -1,5 +1,3 @@
-package com.example.demo.model;
-
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class Facility {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,8 +19,8 @@ public class Facility {
     private String description;
 
     @Column(nullable = false)
-    private String openTime;
+    private String openTime;   // format HH:mm
 
     @Column(nullable = false)
-    private String closeTime;
+    private String closeTime;  // format HH:mm
 }
