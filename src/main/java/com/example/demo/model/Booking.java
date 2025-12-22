@@ -2,27 +2,37 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
+@Table(name = "bookings")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Booking {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "facility_id")
     private Facility facility;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(nullable = false)
     private LocalDateTime startTime;
+
+    @Column(nullable = false)
     private LocalDateTime endTime;
 
+    @Column(nullable = false)
     private String status = "CONFIRMED";
+
+    @OneToMany(mappedBy = "booking")
+    private List<BookingLog> logs;
 }
