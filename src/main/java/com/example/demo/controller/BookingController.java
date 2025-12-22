@@ -1,42 +1,43 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.Booking;
+import com.example.demo.model.Facility;
 import com.example.demo.service.BookingService;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.ResponseEntity;
+import com.example.demo.service.FacilityService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/bookings")
-@Tag(name = "Booking", description = "Create, cancel, and view bookings")
+@RequiredArgsConstructor
 public class BookingController {
 
     private final BookingService bookingService;
+    private final FacilityService facilityService;
 
-    public BookingController(BookingService bookingService) {
-        this.bookingService = bookingService;
+    @PostMapping
+    public Booking addBooking(@RequestBody Booking booking) {
+        // Optionally validate facility exists
+        Facility facility = facilityService.getFacilityById(booking.getFacility().getId());
+        booking.setFacility(facility);
+        return bookingService.saveBooking(booking);
     }
 
-    // POST /bookings/{facilityId}/{userId}
-    @PostMapping("/{facilityId}/{userId}")
-    public ResponseEntity<?> createBooking(@PathVariable Long facilityId,
-                                           @PathVariable Long userId,
-                                           @RequestBody Booking booking) {
-        Booking saved = bookingService.createBooking(facilityId, userId, booking);
-        return ResponseEntity.ok(saved);
+    @GetMapping
+    public List<Booking> getAllBookings() {
+        return bookingService.getAllBookings();
     }
 
-    // PUT /bookings/cancel/{bookingId}
-    @PutMapping("/cancel/{bookingId}")
-    public ResponseEntity<?> cancelBooking(@PathVariable Long bookingId) {
-        Booking updated = bookingService.cancelBooking(bookingId);
-        return ResponseEntity.ok(updated);
+    @GetMapping("/{id}")
+    public Booking getBooking(@PathVariable Long id) {
+        return bookingService.getBookingById(id);
     }
 
-    // GET /bookings/{bookingId}
-    @GetMapping("/{bookingId}")
-    public ResponseEntity<?> getBooking(@PathVariable Long bookingId) {
-        Booking booking = bookingService.getBooking(bookingId);
-        return ResponseEntity.ok(booking);
+    @GetMapping("/facility/{facilityId}")
+    public List<Booking> getBookingsByFacility(@PathVariable Long facilityId) {
+        Facility facility = facilityService.getFacilityById(facilityId);
+        return bookingService.getBookingsByFacility(facility);
     }
 }
