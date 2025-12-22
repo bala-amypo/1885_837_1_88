@@ -1,12 +1,14 @@
+package com.example.demo.model;
+
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
 @Table(name = "users")
-@Data        // generates getters, setters, toString, equals, hashCode
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder     // allows User.builder().name(...).build()
+@Builder
 public class User {
 
     @Id
@@ -14,7 +16,7 @@ public class User {
     private Long id;
 
     @Column(nullable = false)
-    private String name;
+    private String fullName;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -22,10 +24,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Builder.Default
     @Column(nullable = false)
-    private String role = "RESIDENT";
-
-    @OneToOne(mappedBy = "owner")
-    private ApartmentUnit apartmentUnit;
+    private String role;
 }
+`

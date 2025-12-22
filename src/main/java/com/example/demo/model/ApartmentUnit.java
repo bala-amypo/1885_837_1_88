@@ -10,17 +10,14 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class ApartmentUnit {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
     private String unitNumber;
+    private int floor;
 
-    @Column(nullable = false)
-    private Integer floor;
-
-    @OneToOne
-    @JoinColumn(name = "owner_id")
+    @ManyToOne
     private User owner;
 }

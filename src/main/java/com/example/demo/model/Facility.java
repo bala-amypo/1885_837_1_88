@@ -1,3 +1,5 @@
+package com.example.demo.model;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,14 +15,8 @@ public class Facility {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
     private String name;
 
-    private String description;
-
-    @Column(nullable = false)
-    private String openTime;   // format HH:mm
-
-    @Column(nullable = false)
-    private String closeTime;  // format HH:mm
+    private String openTime;
+    private String closeTime;
 }
