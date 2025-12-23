@@ -1,70 +1,28 @@
-// package com.example.demo.service.impl;
+package com.example.demo.model;
 
-// import com.example.demo.model.Booking;
-// import com.example.demo.model.BookingLog;
-// import com.example.demo.repository.BookingLogRepository;
-// import com.example.demo.repository.BookingRepository;
-// import com.example.demo.service.BookingLogService;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.stereotype.Service;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
-// import java.time.LocalDateTime;
-// import java.util.List;
+@Entity
+public class BookingLog {
 
-// @Service
-// public class BookingLogServiceImpl implements BookingLogService {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-//     @Autowired
-//     private BookingLogRepository bookingLogRepository;
-//     @Autowired
-//     private BookingRepository bookingRepository;
+    private Long bookingId; // <- this field must exist
+    private String logMessage;
+    private LocalDateTime loggedAt;
 
-//     @Override
-//     public void addLog(Long bookingId, String message) {
-//         Booking booking = bookingRepository.findById(bookingId)
-//                 .orElseThrow(() -> new RuntimeException("Booking not found"));
-//         BookingLog log = new BookingLog();
-//         log.setBooking(booking);
-//         log.setLogMessage(message);
-//         log.setLoggedAt(LocalDateTime.now());
-//         bookingLogRepository.save(log);
-//     }
+    // Getters and Setters
+    public Long getId() { return id; }
 
-//     @Override
-//     public List<BookingLog> getLogsByBooking(Long bookingId) {
-//         return bookingLogRepository.findByBookingId(bookingId);
-//     }
-// }
-package com.example.demo.service.impl;
+    public Long getBookingId() { return bookingId; }
+    public void setBookingId(Long bookingId) { this.bookingId = bookingId; } // <- Add this
 
-import com.example.demo.model.BookingLog;
-import com.example.demo.repository.BookingLogRepository;
-import com.example.demo.service.BookingLogService;
-import org.springframework.stereotype.Service;
+    public String getLogMessage() { return logMessage; }
+    public void setLogMessage(String logMessage) { this.logMessage = logMessage; }
 
-import java.util.List;
-
-@Service
-public class BookingLogServiceImpl implements BookingLogService {
-
-    private final BookingLogRepository bookingLogRepository;
-
-    public BookingLogServiceImpl(BookingLogRepository bookingLogRepository) {
-        this.bookingLogRepository = bookingLogRepository;
-    }
-
-    @Override
-    public List<BookingLog> getLogsByBooking(Long bookingId) {
-        // fixed: use repository method that exists
-        return bookingLogRepository.findByBookingId(bookingId);
-    }
-
-    @Override
-    public void addLog(Long bookingId, String message) {
-        BookingLog log = new BookingLog();
-        log.setBookingId(bookingId);
-        log.setLogMessage(message);
-        log.setLoggedAt(java.time.LocalDateTime.now());
-        bookingLogRepository.save(log);
-    }
+    public LocalDateTime getLoggedAt() { return loggedAt; }
+    public void setLoggedAt(LocalDateTime loggedAt) { this.loggedAt = loggedAt; }
 }

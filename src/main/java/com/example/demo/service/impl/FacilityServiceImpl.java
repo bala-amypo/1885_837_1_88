@@ -3,7 +3,6 @@ package com.example.demo.service.impl;
 import com.example.demo.model.Facility;
 import com.example.demo.repository.FacilityRepository;
 import com.example.demo.service.FacilityService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,12 +10,15 @@ import java.util.List;
 @Service
 public class FacilityServiceImpl implements FacilityService {
 
-    @Autowired
-    private FacilityRepository facilityRepository;
+    private final FacilityRepository facilityRepository;
+
+    public FacilityServiceImpl(FacilityRepository facilityRepository) {
+        this.facilityRepository = facilityRepository;
+    }
 
     @Override
-    public Facility saveFacility(Facility facility) {
-        return facilityRepository.save(facility);
+    public Facility addFacility(Facility facility) {
+        return facilityRepository.save(facility); // <- Saves and returns
     }
 
     @Override
