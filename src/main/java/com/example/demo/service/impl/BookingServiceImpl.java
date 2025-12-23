@@ -16,8 +16,14 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
 
     @Override
-    public Booking createBooking(Booking booking) {
+    public Booking saveBooking(Booking booking) {
         return bookingRepository.save(booking);
+    }
+
+    @Override
+    public Booking getBookingById(Long id) {
+        return bookingRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
     }
 
     @Override
@@ -25,7 +31,6 @@ public class BookingServiceImpl implements BookingService {
         return bookingRepository.findAll();
     }
 
-    // ✅ ADD THIS
     @Override
     public List<Booking> getBookingsByFacility(Facility facility) {
         return bookingRepository.findByFacility(facility);
