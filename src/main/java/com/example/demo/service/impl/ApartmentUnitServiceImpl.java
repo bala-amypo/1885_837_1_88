@@ -1,38 +1,33 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.exception.BadRequestException;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.ApartmentUnit;
 import com.example.demo.model.User;
 import com.example.demo.repository.ApartmentUnitRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.ApartmentUnitService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
+@RequiredArgsConstructor
 public class ApartmentUnitServiceImpl implements ApartmentUnitService {
 
     private final ApartmentUnitRepository apartmentUnitRepository;
     private final UserRepository userRepository;
 
-    // Constructor injection (order matters)
-    public ApartmentUnitServiceImpl(ApartmentUnitRepository apartmentUnitRepository,
-                                    UserRepository userRepository) {
-        this.apartmentUnitRepository = apartmentUnitRepository;
-        this.userRepository = userRepository;
-    }
-
     @Override
     public ApartmentUnit assignUnitToUser(Long userId, ApartmentUnit unit) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                .orElseThrow(() -> new BadRequestException("User not found"));
 
-        if (unit.getFloor() == null || unit.getFloor() < 0) {
-            throw new BadRequestException("Invalid floor value");
+        if (unit.getFloor() < 0) {
+            throw new BadRequestException("Floor must be >= 0");
         }
-
         if (apartmentUnitRepository.existsByUnitNumber(unit.getUnitNumber())) {
-            throw new BadRequestException("Unit number constraint violation");
+            throw new BadRequestException("Unit number duplicate");
         }
 
         unit.setOwner(user);
@@ -40,11 +35,9 @@ public class ApartmentUnitServiceImpl implements ApartmentUnitService {
     }
 
     @Override
-    public ApartmentUnit getUnitByUser(Long userId) {
+    public Optional<ApartmentUnit> getUnitByUser(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
-        return apartmentUnitRepository.findByOwner(user)
-                .orElseThrow(() -> new ResourceNotFoundException("Apartment unit not found"));
+                .orElseThrow(() -> new BadRequestException("User not found"));
+        return apartmentUnitRepository.findByOwner(user);
     }
 }
