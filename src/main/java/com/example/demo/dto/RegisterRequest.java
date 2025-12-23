@@ -1,17 +1,11 @@
-// RegisterRequest.java
 package com.example.demo.dto;
 
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class RegisterRequest {
-private String name;
-private String email;
-private String password;
+    private String name;
+    private String email;
+    private String password;
+
+    public String getName() { return name; }
+    public String getEmail() { return email; }
+    public String getPassword() { return password; }
 }
