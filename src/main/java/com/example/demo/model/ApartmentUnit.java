@@ -1,23 +1,20 @@
 package com.example.demo.model;
 
-import jakarta.persistence.*;
-import lombok.*;
-
-@Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class ApartmentUnit {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private int floor;
-
-    @Column(unique = true)
-    private String unitNumber;
-
-    @ManyToOne
+    private int unitNumber;
     private User owner;
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public int getFloor() { return floor; }
+    public void setFloor(int floor) { this.floor = floor; }
+
+    public int getUnitNumber() { return unitNumber; }
+    public void setUnitNumber(int unitNumber) { this.unitNumber = unitNumber; }
+
+    public User getOwner() { return owner; }
+    public void setOwner(User owner) { this.owner = owner; }
 }
