@@ -1,15 +1,26 @@
+// BookingRepository.java
 package com.example.demo.repository;
+
 
 import com.example.demo.model.Booking;
 import com.example.demo.model.Facility;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
+
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
-@Repository
+
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
-    // ✅ Add this to fix findByFacility error
-    List<Booking> findByFacility(Facility facility);
+
+List<Booking> findByFacilityAndStartTimeLessThanAndEndTimeGreaterThan(
+Facility facility,
+LocalDateTime endTime,
+LocalDateTime startTime
+);
+
+
+Optional<Booking> findById(Long id);
 }
