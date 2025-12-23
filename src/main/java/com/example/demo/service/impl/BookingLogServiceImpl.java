@@ -1,28 +1,32 @@
-package com.example.demo.model;
+package com.example.demo.service.impl;
 
-import jakarta.persistence.*;
+import com.example.demo.model.BookingLog;
+import com.example.demo.repository.BookingLogRepository;
+import com.example.demo.service.BookingLogService;
+import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import java.util.List;
 
-@Entity
-public class BookingLog {
+@Service
+public class BookingLogServiceImpl implements BookingLogService {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private final BookingLogRepository bookingLogRepository;
 
-    private Long bookingId; // <- this field must exist
-    private String logMessage;
-    private LocalDateTime loggedAt;
+    public BookingLogServiceImpl(BookingLogRepository bookingLogRepository) {
+        this.bookingLogRepository = bookingLogRepository;
+    }
 
-    // Getters and Setters
-    public Long getId() { return id; }
+    @Override
+    public void addLog(Long bookingId, String message) {
+        BookingLog log = new BookingLog();
+        log.setBookingId(bookingId);
+        log.setLogMessage(message);
+        log.setLoggedAt(LocalDateTime.now());
+        bookingLogRepository.save(log);
+    }
 
-    public Long getBookingId() { return bookingId; }
-    public void setBookingId(Long bookingId) { this.bookingId = bookingId; } // <- Add this
-
-    public String getLogMessage() { return logMessage; }
-    public void setLogMessage(String logMessage) { this.logMessage = logMessage; }
-
-    public LocalDateTime getLoggedAt() { return loggedAt; }
-    public void setLoggedAt(LocalDateTime loggedAt) { this.loggedAt = loggedAt; }
+    @Override
+    public List<BookingLog> getLogsByBooking(Long bookingId) {
+        return bookingLogRepository.findByBookingId(bookingId);
+    }
 }
