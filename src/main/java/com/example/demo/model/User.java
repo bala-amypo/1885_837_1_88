@@ -26,5 +26,7 @@ public class User {
 
     @Column(nullable = false)
     private String role;
+
+    @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL)
+    private ApartmentUnit apartmentUnit;
 }
-`
