@@ -6,5 +6,4 @@ import java.util.List;
 public interface FacilityService {
     Facility saveFacility(Facility facility);
     List<Facility> getAllFacilities();
-    Facility getFacilityById(Long id);
 }

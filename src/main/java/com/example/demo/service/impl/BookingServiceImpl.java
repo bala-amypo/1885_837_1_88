@@ -1,72 +1,52 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.BadRequestException;
-import com.example.demo.exception.ConflictException;
-import com.example.demo.model.Booking;
-import com.example.demo.model.Facility;
-import com.example.demo.model.User;
-import com.example.demo.repository.BookingRepository;
-import com.example.demo.repository.FacilityRepository;
-import com.example.demo.repository.UserRepository;
-import com.example.demo.service.BookingLogService;
+import com.example.demo.model.*;
+import com.example.demo.repository.*;
 import com.example.demo.service.BookingService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class BookingServiceImpl implements BookingService {
 
-    private final BookingRepository bookingRepository;
-    private final FacilityRepository facilityRepository;
-    private final UserRepository userRepository;
-    private final BookingLogService bookingLogService;
+    @Autowired
+    private BookingRepository bookingRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private FacilityRepository facilityRepository;
 
     @Override
-    public Booking createBooking(Long facilityId, Long userId, Booking booking) {
-        Facility facility = facilityRepository.findById(facilityId)
-                .orElseThrow(() -> new BadRequestException("Facility not found"));
+    public Booking createBooking(Long userId, Long facilityId, Booking booking) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BadRequestException("User not found"));
-
-        if (!booking.getEndTime().isAfter(booking.getStartTime())) {
-            throw new BadRequestException("End time must be after start time");
-        }
-
-        List<Booking> conflicts = bookingRepository
-                .findByFacilityAndStartTimeLessThanAndEndTimeGreaterThan(
-                        facility, booking.getEndTime(), booking.getStartTime());
-
-        if (!conflicts.isEmpty()) {
-            throw new ConflictException("Facility booking conflict detected");
-        }
-
-        booking.setFacility(facility);
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Facility facility = facilityRepository.findById(facilityId)
+                .orElseThrow(() -> new RuntimeException("Facility not found"));
         booking.setUser(user);
-        booking.setStatus("CONFIRMED");
-        Booking saved = bookingRepository.save(booking);
-
-        bookingLogService.addLog(saved.getId(), "Booking created");
-        return saved;
+        booking.setFacility(facility);
+        booking.setStatus("CREATED");
+        return bookingRepository.save(booking);
     }
 
     @Override
-    public Booking cancelBooking(Long bookingId) {
-        Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new BadRequestException("Booking not found"));
+    public Booking getBooking(Long id) {
+        return bookingRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+    }
 
+    @Override
+    public void cancelBooking(Long id) {
+        Booking booking = getBooking(id);
         booking.setStatus("CANCELLED");
-        Booking updated = bookingRepository.save(booking);
-        bookingLogService.addLog(updated.getId(), "Booking cancelled");
-        return updated;
+        bookingRepository.save(booking);
     }
 
     @Override
-    public Booking getBooking(Long bookingId) {
-        return bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new BadRequestException("Booking not found"));
+    public List<Booking> getBookingsByFacility(Facility facility) {
+        return bookingRepository.findAll().stream()
+                .filter(b -> b.getFacility().getId().equals(facility.getId()))
+                .toList();
     }
 }
