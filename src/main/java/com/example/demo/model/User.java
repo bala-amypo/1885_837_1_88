@@ -1,14 +1,15 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Entity
+@Table(name = "users")
 public class User {
 
     @Id
@@ -16,7 +17,7 @@ public class User {
     private Long id;
 
     @Column(nullable = false)
-    private String fullName;
+    private String name;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -25,8 +26,8 @@ public class User {
     private String password;
 
     @Column(nullable = false)
-    private String role;
+    private String role = "RESIDENT";
 
-    @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "owner")
     private ApartmentUnit apartmentUnit;
 }
