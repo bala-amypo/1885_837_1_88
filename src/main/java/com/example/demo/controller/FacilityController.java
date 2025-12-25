@@ -1,55 +1,32 @@
-// package com.example.demo.controller;
-
-// import com.example.demo.model.Facility;
-// import com.example.demo.service.FacilityService;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.web.bind.annotation.*;
-// import java.util.List;
-
-// @RestController
-// @RequestMapping("/api/facilities")
-// public class FacilityController {
-
-//     @Autowired
-//     private FacilityService facilityService;
-
-//     @PostMapping
-//     public Facility addFacility(@RequestBody Facility facility) {
-//         return facilityService.saveFacility(facility);
-//     }
-
-//     @GetMapping
-//     public List<Facility> getAllFacilities() {
-//         return facilityService.getAllFacilities();
-//     }
-// }
 package com.example.demo.controller;
 
 import com.example.demo.model.Facility;
 import com.example.demo.service.FacilityService;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List; // <- Added import
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/facilities")
+@RequestMapping("/facilities")
 public class FacilityController {
 
     private final FacilityService facilityService;
 
-    @Autowired
     public FacilityController(FacilityService facilityService) {
         this.facilityService = facilityService;
     }
 
+    @Operation(summary = "Add a new facility")
     @PostMapping
     public Facility addFacility(@RequestBody Facility facility) {
         return facilityService.addFacility(facility);
     }
 
+    @Operation(summary = "Get all facilities")
     @GetMapping
     public List<Facility> getAllFacilities() {
         return facilityService.getAllFacilities();
     }
 }
+    

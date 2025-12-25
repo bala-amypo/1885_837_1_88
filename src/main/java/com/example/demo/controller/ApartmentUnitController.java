@@ -2,20 +2,31 @@ package com.example.demo.controller;
 
 import com.example.demo.model.ApartmentUnit;
 import com.example.demo.service.ApartmentUnitService;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.*;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/apartment-units")
+@RequestMapping("/units")
 public class ApartmentUnitController {
 
-    @Autowired
-    private ApartmentUnitService apartmentUnitService;
+    private final ApartmentUnitService apartmentUnitService;
 
-    @GetMapping("/{id}")
-    public ApartmentUnit getUnit(@PathVariable Long id) {
-        Optional<ApartmentUnit> optionalUnit = apartmentUnitService.getApartmentUnitById(id);
-        return optionalUnit.orElseThrow(() -> new RuntimeException("Unit not found"));
+    public ApartmentUnitController(ApartmentUnitService apartmentUnitService) {
+        this.apartmentUnitService = apartmentUnitService;
+    }
+
+    @Operation(summary = "Assign apartment unit to user")
+    @PostMapping("/{userId}")
+    public ApartmentUnit assignUnit(
+            @PathVariable Long userId,
+            @RequestBody ApartmentUnit unit) {
+
+        return apartmentUnitService.assignUnitToUser(userId, unit);
+    }
+
+    @Operation(summary = "Get apartment unit by user")
+    @GetMapping("/{userId}")
+    public ApartmentUnit getUnitByUser(@PathVariable Long userId) {
+        return apartmentUnitService.getUnitByUser(userId);
     }
 }
