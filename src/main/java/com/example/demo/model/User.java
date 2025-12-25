@@ -1,16 +1,24 @@
 package com.example.demo.model;
 
+import jakarta.persistence.*;
 import lombok.*;
 
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
     private String email;
     private String password;
     private String role;
 
+    @OneToOne(mappedBy = "owner")
     private ApartmentUnit apartmentUnit;
 }
