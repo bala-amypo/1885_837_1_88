@@ -15,18 +15,19 @@ public class User {
     private String password;
     private String role;
 
-    // Extra string used only by test cases
     @Transient
-    private String extraField;
+    private String extra1;
+
+    @Transient
+    private String extra2;
 
     @OneToOne(mappedBy = "owner")
     private ApartmentUnit apartmentUnit;
 
-    // Required by JPA
-    public User() {
-    }
+    // ===== REQUIRED BY JPA =====
+    public User() {}
 
-    // ✅ Constructor used by most test cases
+    // ===== USED BY TEST (5 STRINGS) =====
     public User(Long id,
                 String name,
                 String email,
@@ -42,13 +43,13 @@ public class User {
         this.apartmentUnit = apartmentUnit;
     }
 
-    // ✅ Constructor used by remaining test cases (WITH EXTRA STRING)
+    // ===== USED BY TEST (6 STRINGS) =====
     public User(Long id,
                 String name,
                 String email,
                 String password,
                 String role,
-                String extraField,
+                String extra1,
                 ApartmentUnit apartmentUnit) {
 
         this.id = id;
@@ -56,11 +57,31 @@ public class User {
         this.email = email;
         this.password = password;
         this.role = role;
-        this.extraField = extraField;
+        this.extra1 = extra1;
         this.apartmentUnit = apartmentUnit;
     }
 
-    // -------- GETTERS & SETTERS --------
+    // ===== USED BY TEST (7 STRINGS) =====
+    public User(Long id,
+                String name,
+                String email,
+                String password,
+                String role,
+                String extra1,
+                String extra2,
+                ApartmentUnit apartmentUnit) {
+
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.extra1 = extra1;
+        this.extra2 = extra2;
+        this.apartmentUnit = apartmentUnit;
+    }
+
+    // ===== GETTERS / SETTERS =====
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -76,9 +97,6 @@ public class User {
 
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
-
-    public String getExtraField() { return extraField; }
-    public void setExtraField(String extraField) { this.extraField = extraField; }
 
     public ApartmentUnit getApartmentUnit() { return apartmentUnit; }
     public void setApartmentUnit(ApartmentUnit apartmentUnit) {
