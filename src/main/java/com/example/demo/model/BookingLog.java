@@ -14,23 +14,22 @@ public class BookingLog {
     private Booking booking;
 
     private String action;
-    private LocalDateTime time;
+    private LocalDateTime timestamp;
 
-    // Constructors
     public BookingLog() {}
 
-    public BookingLog(Booking booking, String action, LocalDateTime time) {
+    public BookingLog(Booking booking, String action, LocalDateTime timestamp) {
         this.booking = booking;
         this.action = action;
-        this.time = time;
+        this.timestamp = timestamp;
     }
 
-    // Getters and setters
+    // Getters & Setters
     public Long getId() { return id; }
     public Booking getBooking() { return booking; }
     public void setBooking(Booking booking) { this.booking = booking; }
     public String getAction() { return action; }
     public void setAction(String action) { this.action = action; }
-    public LocalDateTime getTime() { return time; }
-    public void setTime(LocalDateTime time) { this.time = time; }
+    public LocalDateTime getTimestamp() { return timestamp; }
+    public void setTimestamp(LocalDateTime timestamp) { this.timestamp = timestamp; }
 }
