@@ -19,6 +19,10 @@ public class User {
     private String field2;
     private String field3;
 
+    @OneToOne
+    private ApartmentUnit apartmentUnit;
+
+
     // JPA requires this
     public User() {}
 
@@ -89,4 +93,13 @@ public class User {
 
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+
+    public ApartmentUnit getApartmentUnit() {
+    return apartmentUnit;
+}
+
+    public void setApartmentUnit(ApartmentUnit apartmentUnit) {
+    this.apartmentUnit = apartmentUnit;
+}
+
 }
