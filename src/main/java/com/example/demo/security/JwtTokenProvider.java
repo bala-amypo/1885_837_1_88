@@ -55,46 +55,32 @@ public class JwtTokenProvider {
     }
 
     public Long getUserIdFromToken(String token) {
-        try {
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(secretKey)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
 
-            Object id = claims.get("userId");
-            if (id != null) {
-                return Long.valueOf(id.toString());
-            }
-            return Long.valueOf(claims.getSubject());
-        } catch (Exception e) {
-            return null;
-        }
+        Object id = claims.get("userId");
+        return id != null ? Long.valueOf(id.toString())
+                          : Long.valueOf(claims.getSubject());
     }
 
     public String getEmailFromToken(String token) {
-        try {
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(secretKey)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-            return claims.get("email", String.class);
-        } catch (Exception e) {
-            return null;
-        }
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("email", String.class);
     }
 
     public String getRoleFromToken(String token) {
-        try {
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(secretKey)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-            return claims.get("role", String.class);
-        } catch (Exception e) {
-            return null;
-        }
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("role", String.class);
     }
 }
