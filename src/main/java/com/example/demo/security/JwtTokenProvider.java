@@ -45,11 +45,11 @@ public class JwtTokenProvider {
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
-                .setSigningKey(secretKey)
-                .build()
-                .parseClaimsJws(token);
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token);
             return true;
-        } catch (Exception ex) {
+        } catch (Exception e) {
             return false;
         }
     }
@@ -62,12 +62,11 @@ public class JwtTokenProvider {
                     .parseClaimsJws(token)
                     .getBody();
 
-            Object userId = claims.get("userId");
-            if (userId != null) {
-                return Long.valueOf(userId.toString());
+            Object id = claims.get("userId");
+            if (id != null) {
+                return Long.valueOf(id.toString());
             }
             return Long.valueOf(claims.getSubject());
-
         } catch (Exception e) {
             return null;
         }
@@ -80,7 +79,6 @@ public class JwtTokenProvider {
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-
             return claims.get("email", String.class);
         } catch (Exception e) {
             return null;
@@ -94,7 +92,6 @@ public class JwtTokenProvider {
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-
             return claims.get("role", String.class);
         } catch (Exception e) {
             return null;

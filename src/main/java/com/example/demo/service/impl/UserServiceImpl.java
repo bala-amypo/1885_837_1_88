@@ -25,9 +25,7 @@ public class UserServiceImpl implements UserService {
             throw new BadRequestException("Email duplicate");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        if (user.getRole() == null) {
-            user.setRole("RESIDENT");
-        }
+        user.setRole("RESIDENT");
         return userRepository.save(user);
     }
 
