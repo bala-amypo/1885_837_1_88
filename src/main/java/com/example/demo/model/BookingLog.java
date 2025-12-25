@@ -7,21 +7,26 @@ import java.time.LocalDateTime;
 public class BookingLog {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
-    private Long bookingId;
+    @ManyToOne
+    private Booking booking;
+
     private String logMessage;
     private LocalDateTime loggedAt;
 
-    public Long getId() { return id; }
+    public BookingLog(){}
 
-    public Long getBookingId() { return bookingId; }
-    public void setBookingId(Long bookingId) { this.bookingId = bookingId; }
+    public BookingLog(Long id,Booking b,String msg,LocalDateTime t){
+        this.id=id; this.booking=b;
+        this.logMessage=msg; this.loggedAt=t;
+    }
 
-    public String getLogMessage() { return logMessage; }
-    public void setLogMessage(String logMessage) { this.logMessage = logMessage; }
+    @PrePersist
+    public void onCreate(){
+        loggedAt=LocalDateTime.now();
+    }
 
-    public LocalDateTime getLoggedAt() { return loggedAt; }
-    public void setLoggedAt(LocalDateTime loggedAt) { this.loggedAt = loggedAt; }
+    // getters & setters
 }
