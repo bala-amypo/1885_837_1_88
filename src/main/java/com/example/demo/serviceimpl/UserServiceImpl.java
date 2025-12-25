@@ -1,26 +1,19 @@
-package com.example.demo.service.impl;
+package com.example.demo.serviceimpl;
 
-import com.example.demo.repository.*;
-import com.example.demo.model.*;
-import com.example.demo.exception.*;
-import com.example.demo.service.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.model.User;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.service.UserService;
 
+@Service
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository repo;
-    private final PasswordEncoder encoder;
+    @Autowired
+    private UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository r, PasswordEncoder e) {
-        this.repo = r;
-        this.encoder = e;
-    }
-
-    public User register(User user) {
-        if (repo.existsByEmail(user.getEmail()))
-            throw new BadRequestException("Email exists");
-
-        user.setPassword(encoder.encode(user.getPassword()));
-        return repo.save(user);
+    @Override
+    public User saveUser(User user) {
+        return userRepository.save(user);
     }
 }
