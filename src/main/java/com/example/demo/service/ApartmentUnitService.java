@@ -1,10 +1,8 @@
 package com.example.demo.service;
 
-import com.example.demo.model.ApartmentUnit;
+import org.springframework.stereotype.Service;
 
-public interface ApartmentUnitService {
-
-    ApartmentUnit assignUnitToUser(Long userId, ApartmentUnit unit);
-
-    ApartmentUnit getUnitByUser(Long userId);
+@Service   // <-- Add this
+public class ApartmentUnitService {
+    // Your existing methods
 }
