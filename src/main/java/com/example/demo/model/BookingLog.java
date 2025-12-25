@@ -1,32 +1,18 @@
 package com.example.demo.model;
 
-import jakarta.persistence.*;
+import lombok.*;
 import java.time.LocalDateTime;
 
-@Entity
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
 public class BookingLog {
 
-    @Id
-    @GeneratedValue
     private Long id;
-
-    @ManyToOne
     private Booking booking;
-
     private String logMessage;
     private LocalDateTime loggedAt;
 
-    public BookingLog(){}
-
-    public BookingLog(Long id,Booking b,String msg,LocalDateTime t){
-        this.id=id; this.booking=b;
-        this.logMessage=msg; this.loggedAt=t;
+    public void onCreate() {
+        this.loggedAt = LocalDateTime.now();
     }
-
-    @PrePersist
-    public void onCreate(){
-        loggedAt=LocalDateTime.now();
-    }
-
-    // getters & setters
 }

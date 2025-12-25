@@ -1,41 +1,28 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.ApartmentUnit;
-import com.example.demo.model.User;
-import com.example.demo.repository.ApartmentUnitRepository;
-import com.example.demo.repository.UserRepository;
-import com.example.demo.service.ApartmentUnitService;
-import org.springframework.stereotype.Service;
+import com.example.demo.repository.*;
+import com.example.demo.model.*;
+import com.example.demo.service.*;
 
-@Service
 public class ApartmentUnitServiceImpl implements ApartmentUnitService {
 
-    private final ApartmentUnitRepository apartmentUnitRepository;
-    private final UserRepository userRepository;
+    private final ApartmentUnitRepository unitRepo;
+    private final UserRepository userRepo;
 
-    public ApartmentUnitServiceImpl(ApartmentUnitRepository apartmentUnitRepository,
-                                    UserRepository userRepository) {
-        this.apartmentUnitRepository = apartmentUnitRepository;
-        this.userRepository = userRepository;
+    public ApartmentUnitServiceImpl(ApartmentUnitRepository u, UserRepository ur) {
+        this.unitRepo = u;
+        this.userRepo = ur;
     }
 
-    @Override
     public ApartmentUnit assignUnitToUser(Long userId, ApartmentUnit unit) {
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
+        User user = userRepo.findById(userId).orElseThrow();
         unit.setOwner(user);
-        return apartmentUnitRepository.save(unit);
+        user.setApartmentUnit(unit);
+        return unitRepo.save(unit);
     }
 
-    @Override
     public ApartmentUnit getUnitByUser(Long userId) {
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        return apartmentUnitRepository.findByOwner(user)
-                .orElseThrow(() -> new RuntimeException("Unit not found"));
+        User user = userRepo.findById(userId).orElseThrow();
+        return unitRepo.findByOwner(user).orElse(null);
     }
 }
