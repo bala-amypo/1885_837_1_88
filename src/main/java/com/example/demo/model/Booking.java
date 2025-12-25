@@ -6,6 +6,9 @@ import java.time.LocalDateTime;
 @Entity
 public class Booking {
 
+    public static final String STATUS_CONFIRMED = "CONFIRMED";
+    public static final String STATUS_CANCELLED = "CANCELLED";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,7 +23,7 @@ public class Booking {
     private LocalDateTime endTime;
     private String status;
 
-    // Getters & Setters
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
