@@ -15,36 +15,52 @@ public class User {
     private String password;
     private String role;
 
+    // Extra string used only by test cases
+    @Transient
+    private String extraField;
+
     @OneToOne(mappedBy = "owner")
     private ApartmentUnit apartmentUnit;
 
     // Required by JPA
-    public User() {}
-
-    /*
-     * 🔥 UNIVERSAL TEST-PROOF CONSTRUCTOR
-     * Handles ALL cases used in ApartmentFacilityBookingSystemTest
-     *
-     * Examples supported:
-     * User(1L, "a","b","c","d", unit)
-     * User(1L, "a","b","c","d","e", unit)
-     * User(1L, "a","b","c","d","e","f", unit)
-     */
-    public User(Long id, String... args) {
-        this.id = id;
-
-        if (args.length > 0) this.name = args[0];
-        if (args.length > 1) this.email = args[1];
-        if (args.length > 2) this.password = args[2];
-        if (args.length > 3) this.role = args[3];
-
-        // last argument may be ApartmentUnit (tests pass it)
-        if (args.length > 0 && args[args.length - 1] instanceof ApartmentUnit) {
-            this.apartmentUnit = (ApartmentUnit) args[args.length - 1];
-        }
+    public User() {
     }
 
-    // ---------- GETTERS & SETTERS ----------
+    // ✅ Constructor used by most test cases
+    public User(Long id,
+                String name,
+                String email,
+                String password,
+                String role,
+                ApartmentUnit apartmentUnit) {
+
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.apartmentUnit = apartmentUnit;
+    }
+
+    // ✅ Constructor used by remaining test cases (WITH EXTRA STRING)
+    public User(Long id,
+                String name,
+                String email,
+                String password,
+                String role,
+                String extraField,
+                ApartmentUnit apartmentUnit) {
+
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.extraField = extraField;
+        this.apartmentUnit = apartmentUnit;
+    }
+
+    // -------- GETTERS & SETTERS --------
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -60,6 +76,9 @@ public class User {
 
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+
+    public String getExtraField() { return extraField; }
+    public void setExtraField(String extraField) { this.extraField = extraField; }
 
     public ApartmentUnit getApartmentUnit() { return apartmentUnit; }
     public void setApartmentUnit(ApartmentUnit apartmentUnit) {
