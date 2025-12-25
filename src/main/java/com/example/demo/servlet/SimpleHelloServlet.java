@@ -1,35 +1,24 @@
 package com.example.demo.servlet;
 
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
-@WebServlet("/hello-servlet")
 public class SimpleHelloServlet extends HttpServlet {
 
+    // 🔴 MUST BE PUBLIC (NOT protected)
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+    public void doGet(HttpServletRequest request,
+                      HttpServletResponse response)
             throws ServletException, IOException {
 
-        resp.setStatus(HttpServletResponse.SC_OK);
-        resp.setContentType("text/plain");
-        resp.getWriter().write("Hello from Simple Servlet");
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
-        // Tests allow either 200 or 405
-        resp.setStatus(HttpServletResponse.SC_OK);
-    }
-
-    @Override
-    public String getServletInfo() {
-        return "SimpleHelloServlet for Apartment Facility Booking System";
+        response.setContentType("text/plain");
+        PrintWriter out = response.getWriter();
+        out.print("Hello World");
+        out.flush();
     }
 }
