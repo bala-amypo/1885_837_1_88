@@ -1,31 +1,28 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.ApartmentUnit;
-import com.example.demo.service.ApartmentUnitService;
-import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.demo.model.ApartmentUnit;
+import com.example.demo.service.ApartmentUnitService;
+
 @RestController
-@RequestMapping("/units")
+@RequestMapping("/api/apartment-unit")
 public class ApartmentUnitController {
 
-    private final ApartmentUnitService apartmentUnitService;
+    @Autowired
+    private ApartmentUnitService apartmentUnitService;
 
-    public ApartmentUnitController(ApartmentUnitService apartmentUnitService) {
-        this.apartmentUnitService = apartmentUnitService;
+    @PostMapping("/assign/{userId}")
+    public ApartmentUnit assignUnitToUser(@PathVariable Long userId, @RequestBody ApartmentUnit unitRequest) {
+        // Fixed: assignUnitToUser returns void, so don't assign to variable
+        apartmentUnitService.assignUnitToUser(userId, unitRequest);
+
+        // Return the assigned unit (or fetch from DB if needed)
+        return unitRequest;
     }
 
-    @Operation(summary = "Assign apartment unit to user")
-    @PostMapping("/{userId}")
-    public ApartmentUnit assignUnit(
-            @PathVariable Long userId,
-            @RequestBody ApartmentUnit unit) {
-
-        return apartmentUnitService.assignUnitToUser(userId, unit);
-    }
-
-    @Operation(summary = "Get apartment unit by user")
-    @GetMapping("/{userId}")
+    @GetMapping("/get/{userId}")
     public ApartmentUnit getUnitByUser(@PathVariable Long userId) {
         return apartmentUnitService.getUnitByUser(userId);
     }

@@ -1,30 +1,39 @@
-package com.example.demo.service.impl;
-
-import com.example.demo.repository.*;
-import com.example.demo.model.*;
-import com.example.demo.service.*;
+package com.example.demo.serviceimpl;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.model.Booking;
+import com.example.demo.model.BookingLog;
+import com.example.demo.repository.BookingLogRepository;
+import com.example.demo.repository.BookingRepository;
+import com.example.demo.service.BookingLogService;
+
+@Service
 public class BookingLogServiceImpl implements BookingLogService {
 
-    private final BookingLogRepository logRepo;
-    private final BookingRepository bookingRepo;
+    @Autowired
+    private BookingLogRepository bookingLogRepository;
 
-    public BookingLogServiceImpl(BookingLogRepository l, BookingRepository b) {
-        this.logRepo = l;
-        this.bookingRepo = b;
+    @Autowired
+    private BookingRepository bookingRepository;
+
+    // Implement the addLog method from interface
+    @Override
+    public void addLog(Long bookingId, String action) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found with id: " + bookingId));
+        
+        BookingLog log = new BookingLog(booking, action, LocalDateTime.now());
+        bookingLogRepository.save(log);
     }
 
-    public BookingLog addLog(Long bookingId, String msg) {
-        Booking b = bookingRepo.findById(bookingId).orElseThrow();
-        BookingLog log = new BookingLog(null, b, msg, LocalDateTime.now());
-        return logRepo.save(log);
-    }
-
+    // If you have a method to fetch logs by booking
+    @Override
     public List<BookingLog> getLogsByBooking(Long bookingId) {
-        Booking b = bookingRepo.findById(bookingId).orElseThrow();
-        return logRepo.findByBookingOrderByLoggedAtAsc(b);
+        return bookingLogRepository.findAllByBookingId(bookingId);
     }
 }
