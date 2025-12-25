@@ -1,9 +1,14 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.*;
-import com.example.demo.repository.*;
+import com.example.demo.exception.ConflictException;
+import com.example.demo.model.Booking;
+import com.example.demo.model.Facility;
+import com.example.demo.model.User;
+import com.example.demo.repository.BookingRepository;
+import com.example.demo.repository.FacilityRepository;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.service.BookingLogService;
 import com.example.demo.service.BookingService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,42 +16,68 @@ import java.util.List;
 @Service
 public class BookingServiceImpl implements BookingService {
 
-    @Autowired
-    private BookingRepository bookingRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private FacilityRepository facilityRepository;
+    private final BookingRepository bookingRepository;
+    private final FacilityRepository facilityRepository;
+    private final UserRepository userRepository;
+    private final BookingLogService bookingLogService;
+
+    public BookingServiceImpl(BookingRepository bookingRepository,
+                              FacilityRepository facilityRepository,
+                              UserRepository userRepository,
+                              BookingLogService bookingLogService) {
+        this.bookingRepository = bookingRepository;
+        this.facilityRepository = facilityRepository;
+        this.userRepository = userRepository;
+        this.bookingLogService = bookingLogService;
+    }
 
     @Override
     public Booking createBooking(Long userId, Long facilityId, Booking booking) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+
         Facility facility = facilityRepository.findById(facilityId)
                 .orElseThrow(() -> new RuntimeException("Facility not found"));
-        booking.setUser(user);
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Booking> conflicts =
+                bookingRepository.findByFacilityAndStartTimeLessThanAndEndTimeGreaterThan(
+                        facility,
+                        booking.getEndTime(),
+                        booking.getStartTime()
+                );
+
+        if (!conflicts.isEmpty()) {
+            throw new ConflictException("Booking conflict");
+        }
+
         booking.setFacility(facility);
-        booking.setStatus("CREATED");
-        return bookingRepository.save(booking);
+        booking.setUser(user);
+        booking.setStatus(Booking.STATUS_CONFIRMED);
+
+        Booking savedBooking = bookingRepository.save(booking);
+        bookingLogService.addLog(savedBooking.getId(), "Created");
+
+        return savedBooking;
     }
 
     @Override
-    public Booking getBooking(Long id) {
-        return bookingRepository.findById(id)
+    public Booking cancelBooking(Long bookingId) {
+
+        Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+        booking.setStatus(Booking.STATUS_CANCELLED);
+
+        Booking savedBooking = bookingRepository.save(booking);
+        bookingLogService.addLog(savedBooking.getId(), "Cancelled");
+
+        return savedBooking;
     }
 
     @Override
-    public void cancelBooking(Long id) {
-        Booking booking = getBooking(id);
-        booking.setStatus("CANCELLED");
-        bookingRepository.save(booking);
-    }
-
-    @Override
-    public List<Booking> getBookingsByFacility(Facility facility) {
-        return bookingRepository.findAll().stream()
-                .filter(b -> b.getFacility().getId().equals(facility.getId()))
-                .toList();
+    public Booking getBooking(Long bookingId) {
+        return bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
     }
 }

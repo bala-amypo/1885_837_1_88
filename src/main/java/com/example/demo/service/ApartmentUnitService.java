@@ -2,8 +2,9 @@ package com.example.demo.service;
 
 import com.example.demo.model.ApartmentUnit;
 
-import java.util.Optional;
-
 public interface ApartmentUnitService {
-    Optional<ApartmentUnit> getApartmentUnitById(Long id);
+
+    ApartmentUnit assignUnitToUser(Long userId, ApartmentUnit unit);
+
+    ApartmentUnit getUnitByUser(Long userId);
 }
