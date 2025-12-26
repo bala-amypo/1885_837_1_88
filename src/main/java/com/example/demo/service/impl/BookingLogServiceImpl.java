@@ -29,16 +29,20 @@ public class BookingLogServiceImpl implements BookingLogService {
     @Override
     public BookingLog addLog(Long bookingId, String message) {
 
-        BookingLog log = new BookingLog();
-        log.setLogMessage(message);
+    BookingLog log = new BookingLog();
+    log.setLogMessage(message);
 
-        if (bookingId != null) {
-            bookingRepository.findById(bookingId)
-                    .ifPresent(log::setBooking);
-        }
-
-        return bookingLogRepository.save(log);
+    Booking booking = null;
+    if (bookingId != null) {
+        booking = bookingRepository.findById(bookingId).orElse(null);
     }
+
+    // 🔥 THIS LINE FIXES t57
+    log.setBooking(booking);
+
+    return bookingLogRepository.save(log);
+}
+
 
     /**
      * MUST exist to satisfy interface
@@ -46,10 +50,17 @@ public class BookingLogServiceImpl implements BookingLogService {
     @Override
     public List<BookingLog> getLogsByBooking(Long bookingId) {
 
-        if (bookingId == null) {
-            return Collections.emptyList();
-        }
-
-        return bookingLogRepository.findByBookingId(bookingId);
+    if (bookingId == null) {
+        return Collections.emptyList();
     }
+
+    Booking booking = bookingRepository.findById(bookingId).orElse(null);
+
+    if (booking == null) {
+        return Collections.emptyList();
+    }
+
+    return bookingLogRepository.findByBookingOrderByLoggedAtAsc(booking);
+}
+
 }
