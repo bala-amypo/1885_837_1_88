@@ -89,19 +89,7 @@ public Booking getBooking(Long bookingId) {
             .orElseThrow(() -> new BadRequestException("Booking not found"));
 }
 
-/* 👇 ADD NEW METHOD HERE 👇 */
-@Override
-public Booking createBooking(Booking booking) {
 
-    Booking savedBooking = bookingRepository.save(booking);
-
-    bookingLogService.addLog(
-            savedBooking.getId(),
-            "BOOKING_CREATED"
-    );
-
-    return savedBooking;
-}
 
 
 }
