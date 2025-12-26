@@ -83,13 +83,4 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new BadRequestException("Booking not found"));
     }
 
-    @Override
-public Booking getBooking(Long bookingId) {
-    return bookingRepository.findById(bookingId)
-            .orElseThrow(() -> new BadRequestException("Booking not found"));
-}
-
-
-
-
 }
