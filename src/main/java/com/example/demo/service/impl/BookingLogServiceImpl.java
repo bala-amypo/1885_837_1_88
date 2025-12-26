@@ -1,14 +1,10 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.BadRequestException;
-import com.example.demo.model.Booking;
 import com.example.demo.model.BookingLog;
 import com.example.demo.repository.BookingLogRepository;
 import com.example.demo.repository.BookingRepository;
 import com.example.demo.service.BookingLogService;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class BookingLogServiceImpl implements BookingLogService {
@@ -23,22 +19,16 @@ public class BookingLogServiceImpl implements BookingLogService {
     }
 
     @Override
-    public BookingLog addLog(Long bookingId, String message) {
-        Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new BadRequestException("Booking not found"));
+    public void addLog(Long bookingId, String message) {
 
         BookingLog log = new BookingLog();
-        log.setBooking(booking);
         log.setLogMessage(message);
 
-        return bookingLogRepository.save(log);
-    }
+        if (bookingId != null) {
+            bookingRepository.findById(bookingId)
+                    .ifPresent(log::setBooking);
+        }
 
-    @Override
-    public List<BookingLog> getLogsByBooking(Long bookingId) {
-        Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new BadRequestException("Booking not found"));
-
-        return bookingLogRepository.findByBookingOrderByLoggedAtAsc(booking);
+        bookingLogRepository.save(log);
     }
 }
