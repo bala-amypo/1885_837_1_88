@@ -6,5 +6,5 @@ public interface ApartmentUnitService {
 
     ApartmentUnit assignUnitToUser(Long userId, ApartmentUnit unit);
 
-    ApartmentUnit getUnitByUser(Long userId);
+`    ApartmentUnit getUnitByUser(Long userId);
 }
