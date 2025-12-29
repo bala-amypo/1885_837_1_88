@@ -1,10 +1,17 @@
 package com.example.demo.service;
 
 import com.example.demo.model.ApartmentUnit;
+import java.util.List;
 
 public interface ApartmentUnitService {
 
-    ApartmentUnit assignUnitToUser(Long userId, ApartmentUnit unit);
+    ApartmentUnit createApartmentUnit(ApartmentUnit unit);
 
-`    ApartmentUnit getUnitByUser(Long userId);
+    ApartmentUnit getApartmentUnit(Long id);
+
+    List<ApartmentUnit> getAllApartmentUnits();
+
+    ApartmentUnit updateApartmentUnit(Long id, ApartmentUnit unit);
+
+    void deleteApartmentUnit(Long id);
 }
